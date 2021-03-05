@@ -1,36 +1,30 @@
+const db = require("../develop/db/db.json");
 const fs = require('fs');
 const path = require('path');
 
 module.exports = (app) => {
     
-        fs.readFile("db/db.json","utf8", (err, data) => {
-        if (err) throw err;
-        var notes = JSON.parse(data);
-
-        //GET api/notes route
-        app.get("/api/notes", function(req, res) {
-            res.json(notes);
-        });
-
-        //POST api/notes
-        app.post("/api/notes", function(req, res) {
-            //Receives note and adds to db.json
-            //Returns note
-            let newNote = req.body;
-            notes.push(newNote);
-            updateDb();
-            return console.log("Note: "+newNote.title);
-        });
-
-        //GET specific note by id
-        app.get("/api/notes/:id", function(req,res) {
-            res.json(notes[req.params.id]);
-        });
-
-        //DELETE note by specific id 
-        app.delete("/api/notes/:id", function(req, res) {
-            notes.splice(req.params.id, 1);
-            updateDb();
-            console.log("Deleted note with id "+req.params.id);
-        });
-        })}
+    app.get('/notes', (req, res) => {
+    store
+      .getNotes()
+      .then((notes) => {
+        return res.json(notes);
+      })
+      .catch((err) => res.status(500).json(err));
+  });
+  
+    app.post('/notes', (req, res) => {
+    store
+      .addNote(req.body)
+      .then((note) => res.json(note))
+      .catch((err) => res.status(500).json(err));
+  });
+  
+  // DELETE "/api/notes" deletes the note with an id equal to req.params.id
+  app.delete('/notes/:id', (req, res) => {
+    store
+      .removeNote(req.params.id)
+      .then(() => res.json({ ok: true }))
+      .catch((err) => res.status(500).json(err));
+  });
+}
