@@ -12,7 +12,7 @@ The application uses an Express.js backend and saves and retrieves a user's note
 
 
 ## Usage
-The application uses the express.js to build the backend. 
+The application uses the Express.js to build the backend. 
 
 ## Contributing
 Not accepting contributors at this time.
